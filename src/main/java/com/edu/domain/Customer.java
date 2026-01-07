@@ -2,7 +2,7 @@ package com.edu.domain;
 // Clase POJO
 public class Customer {
 
-    //atributos
+    //atributo
     private int ID;
     private String name;
     private String username;

@@ -16,7 +16,7 @@ public class CustomerController {
             new Customer(123, "Edu Quispe", "edu", "123"),
             new Customer(456,"Cristhian Rojas", "crithian", "456"),
             new Customer(789, "Rocio Ramos", "rocio", "789"),
-            new Customer(234,"Yhanis Basilio", "yhanis","159")
+            new Customer(159,"Yhanis Basilio", "yhanis","159")
     ));
 
     @GetMapping("clientes")
