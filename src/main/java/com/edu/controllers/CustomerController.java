@@ -1,9 +1,7 @@
 package com.edu.controllers;
 
 import com.edu.domain.Customer;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,13 +18,13 @@ public class CustomerController {
             new Customer(159,"Yhanis Basilio", "yhanis","159")
     ));
 
-    @GetMapping("clientes")
+    @GetMapping("/clientes")
     public List<Customer> getCustomers(){
         return customers;
     }
 
     // Enrutamiento de URL
-    @GetMapping({"clientes/{username}"})
+    @GetMapping({"/clientes/{username}"})
     public Customer getCliente(@PathVariable String username){
         for(Customer c : customers) {
             if (c.getUsername().equalsIgnoreCase(username)){
@@ -34,6 +32,12 @@ public class CustomerController {
             }
         }
         return null;
+    }
+
+    @PostMapping("/clientes")
+    public Customer postCliente(@RequestBody Customer customer){
+        customers.add(customer);
+        return  customer;
     }
 
 }
