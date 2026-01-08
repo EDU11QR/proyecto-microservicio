@@ -1,6 +1,8 @@
 package com.edu.controllers;
 
 import com.edu.domain.Customer;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -24,66 +26,74 @@ public class CustomerController {
     //Metodo Get para listar Clientes
     @RequestMapping(method = RequestMethod.GET) //ambas maneras son correctas de trabajar
     // @GetMapping //("/clientes")
-    public List<Customer> getCustomers(){
+    public ResponseEntity <List<Customer>> getCustomers(){
 
-        return customers;
+        return ResponseEntity.ok(customers);
     }
 
     // Enrutamiento de URL
     @RequestMapping(value = "/{username}", method = RequestMethod.GET)
     // @GetMapping({"/{username}"})
-    public Customer getCliente(@PathVariable String username){
+    public ResponseEntity<?> getCliente(@PathVariable String username){
         for(Customer c : customers) {
             if (c.getUsername().equalsIgnoreCase(username)){
-                return  c;
+
+                return ResponseEntity.ok(c);
             }
         }
-        return null;
+        //Colocamos Not_Found == error 404 y mandamos un mensaje de error
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado con username: " + username);
     }
 
     //Metodo Post para crear un nuevo Cliente
     @RequestMapping(method = RequestMethod.POST)
     // @PostMapping
-    public Customer postCliente(@RequestBody Customer customer){
+    public ResponseEntity<?> postCliente(@RequestBody Customer customer){
         customers.add(customer);
-        return  customer;
+
+        //Colocamos CREATED == 201
+        return ResponseEntity.status(HttpStatus.CREATED).body("Cliente creado Exitosamente: " + customer.getUsername());
     }
 
     //Metodo Put para Actualizar/Modificar un cliente
     @RequestMapping(method = RequestMethod.PUT)
     // @PutMapping
-    public  Customer putCliente(@RequestBody Customer customer){
+    public ResponseEntity<?> putCliente(@RequestBody Customer customer){
         for(Customer c : customers){
             if (c.getID() == customer.getID()){
                 c.setName(customer.getName());
                 c.setUsername(customer.getUsername());
                 c.setPassword(customer.getPassword());
 
-                return c;
+                // Colocamos ok == 200
+                return ResponseEntity.ok("Cliente modificado satisfactoriamente: " + customer.getID());
             }
         }
-        return null;
+        // colocamos NOT_FOUND == 404
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado: " + customer.getID());
     }
 
     //Metodo Delete para Eliminar un cliente
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     // @DeleteMapping("/{id}")
-    public Customer deleteCliente(@PathVariable int id){
+    public ResponseEntity<?> deleteCliente(@PathVariable int id){
         for (Customer c : customers){
             if(c.getID() == id){
                 customers.remove(c);
 
-                return c;
+                // Codigo HTTP NO_CONTENT == 204 (NO REGRESA NINGUN MENSAJE)
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Cliente Eliminado exitosamente con el ID: " + c.getID());
             }
         }
-        return null;
+        // colocamos NOT_FOUND == 404
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no Encontrado con el ID: " + id);
     }
 
     // Metodo Patch se usa para actualizar parcialmente un recurso
     // no todo el objeto a diferencia del put
     @RequestMapping(method = RequestMethod.PATCH)
     // @PatchMapping
-    public Customer patchCliente(@RequestBody Customer customer){
+    public ResponseEntity<?> patchCliente(@RequestBody Customer customer){
         for(Customer c : customers){
             if (c.getID() == customer.getID()){
 
@@ -99,10 +109,12 @@ public class CustomerController {
                     c.setPassword(customer.getPassword());
                 }
 
-                return c;
+                // Colocamos ok == 200
+                return ResponseEntity.ok("Cliente modificado parcialmente con el ID: " + customer.getID());
             }
         }
-        return null;
+        // Colocamos NOT_FOUND == 404
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado con el ID: " + customer.getID());
     }
 
 
